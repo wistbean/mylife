@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+python-dotenv = "*"
+flask-wtf = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+flask-whooshee = "*"
+flask-login = "*"
+flask-debugtoolbar = "*"
+mysqlclient = "*"
+click = "*"
+
+[dev-packages]
+watchdog = "*"
+faker = "*"
+
+[requires]
+python_version = "3.9"

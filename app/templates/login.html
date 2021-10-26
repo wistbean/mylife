@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'header.html' %}
+    <body class="bg-gradient-primary">
+
+        <div class="container">
+
+            <!-- Outer Row -->
+            <div class="row justify-content-center">
+
+                <div class="col-xl-10 col-lg-12 col-md-9">
+
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                                <div class="col-lg-6">
+                                    <div class="p-5">
+                                        <div class="text-center">
+                                            <h1 class="h4 text-gray-900 mb-4">登录一波</h1>
+                                        </div>
+                                        <form class="user" action="{{ url_for('auth.login') }}" method="post">
+                                            {{ form.csrf_token }}
+                                            <div class="form-group">
+                                                {{ form.username(class="form-control form-control-user", placeholder="用户名") }}<br/>
+                                                {% for msg in form.username.errors %}
+                                                {{ msg }}
+                                                {% endfor%}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ form.password(class="form-control form-control-user", placeholder="密码")}}<br/>
+                                                {% for msg in form.password.errors %}
+                                                {{ msg }}
+                                                {% endfor%}
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox small">
+                                                    <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                    {{ form.remember_pwd(class="custom-control-input") }}
+                                                    {{ form.remember_pwd.label(class="custom-control-label") }}
+                                                </div>
+                                            </div>
+                                            {{ form.login(class="btn btn-primary btn-user btn-block") }}
+                                        </form>
+                                        <hr>
+
+                                        {% if errormsg %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ errormsg }}
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="text-center">
+                                            <a class="small" href="forgot-password.html">密码忘了？</a>
+                                        </div>
+                                        <div class="text-center">
+                                            <a class="small" href="{{ url_for('auth.signup') }}">注册一个</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </body>
+
+</html>

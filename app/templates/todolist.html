@@ -1,0 +1,82 @@
+{% from 'nav.html' import nav with context%}
+{% extends 'base.html'%}
+<!-- Page Wrapper -->
+<div id="wrapper">
+    {% block main%}
+    {% include 'sidebar.html' %}
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">任务列表</h1>
+        </div>
+
+        <form action="{{ url_for('todo.add_todolist') }}" method="post">
+            {{ form.csrf_token }}
+            <div class="form-group col-xl-8 mx-auto mb-3">
+                <div class="form-group">
+                    <label>创建一个大计划:</label>
+                    {{ form.todo(class="form-control", placeholder="不要高估了自己需要完成任务的时间哦") }}
+                </div>
+            </div>
+        </form>
+
+
+        {% for todo in todolist %}
+        <div id="accordion">
+            <div class="col-xl-8 mx-auto mb-3">
+                <div class="card shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center" id="heading{{ todo.id }}">
+                            <div class="col">
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{ todo.id }}"
+                                                                   aria-expanded="true" aria-controls="collapse{{ todo.id }}">
+                                        {{ todo.body }}
+                                    </button>
+                                </div>
+                                <div class="h8  ml-2 text-gray-600">{{ todo.create_at }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="progress" style="height: 1px;">
+                        <div class="progress-bar" role="progressbar" id="progerssbar{{ todo.id }}" style="width: {{ todo.get_done_percent }}%;" aria-valuenow="65"
+                                                                                                                                                aria-valuemin="0" aria-valuemax="{{ todo.get_all_subplan_count }}"></div>
+                    </div>
+                    <div id="collapse{{ todo.id }}" class="collapse" aria-labelledby="heading{{ todo.id }}"
+                                                                     data-parent="#accordion">
+
+                        <div class="card-body border border-light">
+                            <div class="card-body border border-light">
+                                <label class="card-text d-inline">创建子计划:</label>
+                                <input id="myinput" type="text" class="form-control"></input>
+                                <input id="collapse" value="{{ todo.id }}" type="hidden"></input>
+                            </div>
+                        </div>
+                        {% for sub_plan in todo.sub_plans%}
+                        <div class="card-body border border-light">
+                            <p class="card-text d-inline">{{ sub_plan.body }}</p>
+                            {% if sub_plan.is_done == 1%}
+                            <input type="checkbox" data-todo-id="{{ sub_plan.id }}" value="{{ todo.id }}" class="btn-check d-inline float-right"
+                                                                                    autocomplete="off" checked>
+                            {% else %}
+                            <input type="checkbox" data-todo-id="{{ sub_plan.id }}" value="{{ todo.id }}" class="btn-check d-inline float-right"
+                                                                                    autocomplete="off">
+
+                            {% endif %}
+
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if pagination %}
+    {{ nav('todo.todolist') }}
+    {% endif %}
+    {% endblock main %}

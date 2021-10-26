@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-8">账号注册</h1>
+                        </div>
+                        <form action="{{ url_for('auth.signup') }}" class="user" method="post">
+                             {{ form.csrf_token }}
+                            <div class="form-group">
+                                {{ form.username(class="form-control form-control-user", type="text", placeholder="用户名") }}
+                            </div><br/>
+                            {% for message in form.username.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor%}
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    {{ form.password(class="form-control form-control-user", type="password", placeholder="密码") }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form.password_confirm(class="form-control form-control-user", type="password", placeholder="确认密码") }}
+                                </div>
+                            </div>
+                            {% for message in form.password.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+ 
+                            <a href="login.html" class="btn btn-primary btn-user btn-block">
+                                {{ form.submit(class="btn btn-primary btn-user btn-block") }}
+                            </a>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="{{ url_for('auth.login') }}">已有账号？直接登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
