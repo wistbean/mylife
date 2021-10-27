@@ -48,7 +48,7 @@ def login():
                     login_user(user, remember=True)
                 else:
                     login_user(user)
-                return render_template('index.html', title='个人管理系统', username=username)
+                return redirect(url_for('main.index'))
             else:
                 # 用户名或密码不正确
                 return render_template('login.html', form=login_form, errormsg='用户名或密码不正确')
@@ -61,4 +61,4 @@ def login():
 @auth.route('logout')
 def logout():
     logout_user()
-    return redirect('auth.login')
+    return redirect('login')
