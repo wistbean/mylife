@@ -16,6 +16,9 @@ from flask_login import current_user, login_user, login_required
 from app.todo.forms import TodoListForm, TodoForm
 from app.todo import todo
 from app.models import Plan, SubPlan
+from sqlalchemy import and_, or_
+from sqlalchemy.sql.expression import func
+from app import db
 
 
 @todo.route('/list', methods=['GET'])
@@ -25,10 +28,22 @@ def todolist():
     s = request.args.get('s', '')
     page = request.args.get('page', 1, type=int)
     page_num = 7
-    pagination = Plan.query.with_parent(current_user) \
-                           .whooshee_search(s) \
+
+    subquery_all_subplan = db.session.query(SubPlan.plan_id) \
+                                     .filter(SubPlan.user_id == current_user.id) \
+                                     .subquery()
+
+    subquery_unfished_plan = db.session.query(SubPlan.plan_id)\
+                                       .filter(SubPlan.user_id == current_user.id) \
+                                       .group_by(SubPlan.plan_id) \
+                                       .having(func.sum(SubPlan.is_done)/func.count() < 1)
+
+    pagination = Plan.query.filter(and_(Plan.user_id == current_user.id, 
+                                    or_(Plan.id.notin_(subquery_all_subplan), 
+                                        Plan.id.in_(subquery_unfished_plan)))) \
                            .order_by(Plan.create_at.desc())\
                            .paginate(page, per_page=page_num)
+
     todolist = pagination.items
     return render_template('todolist.html', form=form, todolist=todolist, pagination=pagination)
 

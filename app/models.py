@@ -15,6 +15,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
 from app import db, whooshee, login_manager
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 class BaseModel:
@@ -73,12 +75,14 @@ class Plan(db.Model, BaseModel):
     def get_all_subplan_count(self):
         return self.sub_plans.count()
 
-    @property
+    @hybrid_property
     def get_done_percent(self):
         try:
             return round((self.get_subplan_done_count/self.get_all_subplan_count), 2) * 100
         except:
             return 0
+
+        
 
 
 class SubPlan(db.Model, BaseModel):
